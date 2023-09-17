@@ -11,11 +11,12 @@ namespace serverMaestro.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public double Price { get; set; }
-        [Required]
-        public int SalePricePercent { get; set; }
+        public double NewPrice { get; set; }
+        public double OldPrice { get; set; }
         [Required]
         public string Description { get; set; }
+        [Required]
+        public string ShortDescription { get; set; }
         [Required]
         public int CountOnStock { get; set; }
         public DateTime AppearedDate { get; set; }

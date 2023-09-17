@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using serverMaestro.Data;
 
@@ -11,9 +12,11 @@ using serverMaestro.Data;
 namespace serverMaestro.Migrations
 {
     [DbContext(typeof(MaestroContext))]
-    partial class MaestroContextModelSnapshot : ModelSnapshot
+    [Migration("20230903203832_init11")]
+    partial class init11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,25 +108,6 @@ namespace serverMaestro.Migrations
                     b.ToTable("History");
                 });
 
-            modelBuilder.Entity("serverMaestro.Models.HotDeal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("FinishesAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HotDeal");
-                });
-
             modelBuilder.Entity("serverMaestro.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -201,9 +185,6 @@ namespace serverMaestro.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<double>("SaledByPrice")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

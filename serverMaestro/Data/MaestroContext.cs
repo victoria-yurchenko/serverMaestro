@@ -15,8 +15,10 @@ namespace serverMaestro.Data
         }
 
         public DbSet<Card> Card { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
+        public DbSet<History> History { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<PasswordHash> PasswordHash { get; set; }
         public DbSet<Picture> Picture { get; set; }
         public DbSet<PictureProduct> PictureProduct { get; set; }
         public DbSet<Product> Product { get; set; }
@@ -25,5 +27,7 @@ namespace serverMaestro.Data
         public DbSet<User> User { get; set; }
         public DbSet<Wishlist> Wishlist { get; set; }
         public DbSet<Feature> Feature { get; set; }
+        public DbSet<OrderAddress> OrderAddress { get; set; }
+        public DbSet<HotDeal> HotDeal { get; set; }
     }
 }

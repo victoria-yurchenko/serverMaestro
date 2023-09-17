@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace serverMaestro.Models
 {
-    public class PasswordHash
+    public class History
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public string Hash { get; set; }
         [ForeignKey($"FK_{nameof(UserId)}")]
         public int UserId { get; set; }
+        [ForeignKey($"FK_{nameof(OrderId)}")]
+        public int OrderId { get; set; }
     }
 }
