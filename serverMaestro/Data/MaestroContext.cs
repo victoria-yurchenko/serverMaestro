@@ -29,5 +29,6 @@ namespace serverMaestro.Data
         public DbSet<Feature> Feature { get; set; }
         public DbSet<OrderAddress> OrderAddress { get; set; }
         public DbSet<HotDeal> HotDeal { get; set; }
+        public DbSet<Review> Review { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using serverMaestro.Data;
 
@@ -11,9 +12,11 @@ using serverMaestro.Data;
 namespace serverMaestro.Migrations
 {
     [DbContext(typeof(MaestroContext))]
-    partial class MaestroContextModelSnapshot : ModelSnapshot
+    [Migration("20230917223947_init13")]
+    partial class init13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,35 +303,6 @@ namespace serverMaestro.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategory");
-                });
-
-            modelBuilder.Entity("serverMaestro.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rate")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("serverMaestro.Models.Role", b =>

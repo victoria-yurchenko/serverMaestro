@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using serverMaestro.Data;
 using serverMaestro.Models;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Security.Principal;
 
 namespace serverMaestro.Controllers
@@ -26,6 +27,14 @@ namespace serverMaestro.Controllers
             List<Product> products = _context.Product.ToList();
             foreach (Product product in products)
             {
+                List<Review> reviewsOnProduct = _context.Review.Where(r => r.ProductId == product.Id).ToList();
+                int rate = 0;
+                if (reviewsOnProduct != null)
+                {
+                    foreach (Review review in reviewsOnProduct)
+                        rate += review.Rate;
+                }
+
                 productsDBO.Add(new ProductDBO()
                 {
                     ProductId = product.Id,
@@ -37,7 +46,8 @@ namespace serverMaestro.Controllers
                     Category = _context.Category.ToList().Where(
                         c => c.Id == _context.ProductCategory.ToList().Where(pc => pc.ProductId == product.Id).FirstOrDefault()?.CategoryId
                     )?.FirstOrDefault()?.Title ?? string.Empty,
-                    IsNew = (DateTime.Now - product.AppearedDate).Days <= 30 ? true : false
+                    IsNew = (DateTime.Now - product.AppearedDate).Days <= 30 ? true : false,
+                    Rate = rate / (reviewsOnProduct.Count != 0 ? reviewsOnProduct.Count : 1)
                 });
             }
             List<string> categories = _context.Category.ToList().Select(c => c.Title).ToList();
@@ -56,6 +66,22 @@ namespace serverMaestro.Controllers
             try
             {
                 Product product = _context.Product.ToList().Where(p => p.Id == id).FirstOrDefault();
+                List<Review> reviewsFromDb = _context.Review.Where(r => r.ProductId == product.Id).ToList();
+                List<ReviewDTO> reviews = new List<ReviewDTO>();
+
+                foreach (Review review in reviewsFromDb)
+                {
+                    User user = _context.User.Find(review.UserId) ?? new User();
+                    string userFirstName = _context.OrderAddress.Find(user.OrderAddressId)?.FirstName ?? "Stranger";
+                    reviews.Add(new ReviewDTO()
+                    {
+                        Rate = review.Rate,
+                        CreatedAt = $"{review.CreatedAt.Day}.{review.CreatedAt.Month}.{review.CreatedAt.Year}",
+                        ReviewText = review.ReviewText,
+                        UserName = userFirstName
+                    });
+                }
+
                 string[] categories = GetCategories(product);
                 string[] pictures = GetPictures(product);
                 string[] features = GetFeatures(product);
@@ -72,7 +98,8 @@ namespace serverMaestro.Controllers
                     Categories = categories,
                     Pictures = pictures,
                     Features = features,
-                    ProductId = product.Id
+                    ProductId = product.Id,
+                    Reviews = reviews
                 };
 
                 return Ok(toSend);
@@ -377,7 +404,7 @@ namespace serverMaestro.Controllers
             if (order == null)
                 return BadRequest();
             string orderStatus = order.OrderStatus == OrderStatus.InProcess.ToString() ? "In Process" : order.OrderStatus;
-            return Ok(new {OrderStatus = orderStatus });
+            return Ok(new { OrderStatus = orderStatus });
         }
 
         [HttpGet("gethotdeals")]
@@ -439,6 +466,14 @@ namespace serverMaestro.Controllers
             return Ok();
         }
 
+        [HttpPost("addreview")]
+        public async Task<IActionResult> AddReview(Review review)
+        {
+            review.CreatedAt = DateTime.UtcNow;
+            _context.Review.Add(review);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
         /// <summary>
         /// Split string by separator
@@ -650,6 +685,7 @@ namespace serverMaestro.Controllers
             public double NewPrice { get; set; }
             public bool IsNew { get; set; }
             public int StockCount { get; set; }
+            public int Rate { get; set; }
             public List<string> Categories { get; set; }
         }
 
@@ -685,6 +721,14 @@ namespace serverMaestro.Controllers
         {
             public int ProductId { get; set; }
             public DateTime FinishesAt { get; set; }
+        }
+
+        public sealed class ReviewDTO
+        {
+            public string CreatedAt { get; set; }
+            public int Rate { get; set; }
+            public string ReviewText { get; set; }
+            public string UserName { get; set; }
         }
     }
 }

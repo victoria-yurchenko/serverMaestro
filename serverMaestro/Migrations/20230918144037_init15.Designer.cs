@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using serverMaestro.Data;
 
@@ -11,9 +12,11 @@ using serverMaestro.Data;
 namespace serverMaestro.Migrations
 {
     [DbContext(typeof(MaestroContext))]
-    partial class MaestroContextModelSnapshot : ModelSnapshot
+    [Migration("20230918144037_init15")]
+    partial class init15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
